@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>الحافوزليق</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .message {
+            font-size: 7rem;
+            color: #ff0000;
+            text-align: center;
+            text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000;
+            animation: flicker 0.1s infinite;
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            border: 5px solid #8b0000;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .blood {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="darkred" d="M20,30 Q40,15 60,30 T100,30 L100,100 L0,100 L0,30Z"/></svg>');
+            background-size: 300% 300%;
+            animation: bloodFlow 15s linear infinite;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        .skull {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20rem;
+            opacity: 0.2;
+            z-index: 0;
+        }
+
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+            20%, 24%, 55% { opacity: 0.3; }
+        }
+
+        @keyframes bloodFlow {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="blood"></div>
+    <div class="skull">💀</div>
+    <div class="message">الحافوزليق مر من هنا</div>
+    
+    <audio autoplay loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-horror-scream-389.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // تأثير الكتابة المرعبة
+        const message = document.querySelector('.message');
+        const text = "الحافوزليق مر من هنا";
+        let index = 0;
+        
+        message.textContent = '';
+        
+        const typeWriter = setInterval(() => {
+            if (index < text.length) {
+                message.textContent += text.charAt(index);
+                index++;
+                
+                // تأثير صوت الطباعة
+                const typeSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-typewriter-click-1104.mp3');
+                typeSound.playbackRate = 2.5;
+                typeSound.play();
+            } else {
+                clearInterval(typeWriter);
+                
+                // تأثير عشوائي للدم
+                setInterval(() => {
+                    const bloodDrop = document.createElement('div');
+                    bloodDrop.style.position = 'absolute';
+                    bloodDrop.style.top = Math.random() * 100 + 'vh';
+                    bloodDrop.style.left = Math.random() * 100 + 'vw';
+                    bloodDrop.style.width = '5px';
+                    bloodDrop.style.height = '5px';
+                    bloodDrop.style.background = 'darkred';
+                    bloodDrop.style.boxShadow = '0 0 10px red';
+                    bloodDrop.style.borderRadius = '50%';
+                    document.body.appendChild(bloodDrop);
+                    
+                    // تحريك قطرة الدم
+                    let size = 5;
+                    const grow = setInterval(() => {
+                        size += 0.5;
+                        bloodDrop.style.width = size + 'px';
+                        bloodDrop.style.height = size + 'px';
+                        bloodDrop.style.opacity = (1 - size/100).toString();
+                        
+                        if (size > 100) {
+                            clearInterval(grow);
+                            bloodDrop.remove();
+                        }
+                    }, 50);
+                }, 500);
+            }
+        }, 100);
+    </script>
+</body>
+</html>
